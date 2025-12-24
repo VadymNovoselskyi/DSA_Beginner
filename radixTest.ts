@@ -39,7 +39,7 @@ function radixSortShiftRebuild(nums: number[]) {
   const rounds = mostDigits(nums);
   const buckets: number[][] = Array.from({ length: 10 }, () => []);
 
-  for (let i = 0; i <= rounds; i++) {
+  for (let i = 0; i < rounds; i++) {
     for (const num of nums) buckets[getDigit(num, i)].push(num);
 
     nums = [];
@@ -59,7 +59,7 @@ function radixSortShiftInPlace(nums: number[]) {
   const rounds = mostDigits(nums);
   const buckets: number[][] = Array.from({ length: 10 }, () => []);
 
-  for (let i = 0; i <= rounds; i++) {
+  for (let i = 0; i < rounds; i++) {
     for (const num of nums) buckets[getDigit(num, i)].push(num);
 
     let count = 0;
@@ -78,7 +78,7 @@ function radixSortOwnCount(nums: number[]) {
   if (nums.length <= 1) return nums;
   const rounds = mostDigits(nums);
 
-  for (let i = 0; i <= rounds; i++) {
+  for (let i = 0; i < rounds; i++) {
     const buckets: number[][] = Array.from({ length: 10 }, (v, i) => []);
     for (const num of nums) {
       buckets[getDigit(num, i)].push(num);
