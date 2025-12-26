@@ -150,12 +150,12 @@ class SinglyLinkedList<T> {
       index > 0
         ? index % this.length
         : this.length - Math.abs(index % this.length);
-    if (normalizedIdx === 0) return this;
+    if (normalizedIdx === 0 || this.length <= 1) return this;
 
     const oldHead = this.head!;
     const oldTail = this.tail!;
     const newTail = this.get(normalizedIdx - 1)!;
-    const rotationNode = this.get(normalizedIdx)!;
+    const rotationNode = newTail.next!;
 
     this.head = rotationNode;
     oldTail.next = oldHead;
