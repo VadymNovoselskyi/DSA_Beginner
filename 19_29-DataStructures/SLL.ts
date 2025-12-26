@@ -116,7 +116,7 @@ class SinglyLinkedList<T> {
   remove(index: number): Node<T> | undefined {
     // console.log(`Removing index: ${index}`);
     if (index === 0) return this.shift();
-    else if (index === this.length) this.pop();
+    else if (index === this.length) return this.pop();
 
     const previousNode = this.get(index - 1);
     const nodeToRemove = this.get(index);
