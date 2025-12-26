@@ -80,14 +80,21 @@ class DoublyLinkedList<T> {
   }
 
   get(index: number): Node<T> | null {
-    // console.log(`Getting index: ${index}`);
+    console.log(`Getting index: ${index}`);
     if (index < 0 || index >= this.length) return null;
+    const startAtHead = index < this.length / 2;
 
-    let element = this.head!;
-    for (let i = 0; i < index; i++) {
-      element = element.next!;
+    let element = startAtHead ? this.head! : this.tail!;
+    if (startAtHead) {
+      for (let i = 0; i < index; i++) {
+        element = element.next!;
+      }
+    } else {
+      for (let i = this.length - 1; i > index; i--) {
+        element = element.prev!;
+      }
     }
-    // console.log(`Returning: ${element}`);
+    console.log(`Returning: ${element}`);
     return element;
   }
 
@@ -205,9 +212,11 @@ list.print();
 // console.log("After construction reverse: ");
 // list.printReverse();
 
-// console.log(list.get(1));
-// console.log(list.get(3));
-// console.log(list.get(5));
+console.log(list.get(0));
+console.log(list.get(1));
+console.log(list.get(4));
+console.log(list.get(5));
+console.log(list.get(list.length - 1));
 
 // console.log(list.pop());
 // console.log(list.shift());
@@ -241,8 +250,8 @@ list.print();
 // console.log("\nAfter reverse but also reversed: ");
 // list.printReverse();
 
-list.rotate(-1);
-console.log("\nAfter rotate: ");
-list.print();
-console.log("\nAfter rotate but reversed: ");
-list.printReverse();
+// list.rotate(-1);
+// console.log("\nAfter rotate: ");
+// list.print();
+// console.log("\nAfter rotate but reversed: ");
+// list.printReverse();
