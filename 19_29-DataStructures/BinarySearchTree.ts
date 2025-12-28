@@ -159,6 +159,31 @@ export class BinarySearchTree<T> {
     return result;
   }
 
+  DFSPreOrder(node: Node<T> | null = this.root, result: T[] = []): T[] {
+    if (!node) return result;
+
+    result.push(node.value);
+    this.DFSPreOrder(node.left, result);
+    this.DFSPreOrder(node.right, result);
+    return result;
+  }
+  DFSPostOrder(node: Node<T> | null = this.root, result: T[] = []): T[] {
+    if (!node) return result;
+
+    this.DFSPostOrder(node.left, result);
+    this.DFSPostOrder(node.right, result);
+    result.push(node.value);
+    return result;
+  }
+  DFSInOrder(node: Node<T> | null = this.root, result: T[] = []): T[] {
+    if (!node) return result;
+
+    this.DFSInOrder(node.left, result);
+    result.push(node.value);
+    this.DFSInOrder(node.right, result);
+    return result;
+  }
+
   getOffsetMap(): OffsetEnty<T>[] {
     if (!this.root) return [];
     const baseOffset = 30;
@@ -237,7 +262,11 @@ console.log(bst.isBalanced());
 bst.insert(60);
 bst.insert(70);
 
-console.log(bst.isBalanced());
+// console.log(bst.isBalanced());
 // bst.remove(30);
 // console.log("\n\nAfter removal:");
 // bst.print();
+
+console.log(bst.DFSPreOrder());
+console.log(bst.DFSPostOrder());
+console.log(bst.DFSInOrder());
