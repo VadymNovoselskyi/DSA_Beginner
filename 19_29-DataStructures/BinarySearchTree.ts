@@ -1,6 +1,19 @@
+import { Queue } from "./Queue";
+
 export {};
 
-class Node<T> {
+type OffsetQueueEnty<T> = {
+  node: Node<T>;
+  offset: number;
+  depth: number;
+};
+type OffsetEnty<T> = {
+  value: T;
+  offset: number;
+  depth: number;
+};
+
+export class Node<T> {
   value: T;
   left: Node<T> | null;
   right: Node<T> | null;
@@ -11,7 +24,7 @@ class Node<T> {
   }
 }
 
-class BinarySearchTree<T> {
+export class BinarySearchTree<T> {
   root: Node<T> | null;
   constructor() {
     this.root = null;
@@ -62,9 +75,7 @@ class BinarySearchTree<T> {
     let current = this.root;
     let prev: Node<T> | null = null;
 
-    console.log("Before removal: ");
-    this.print();
-    while (true) {
+    while (value !== current.value) {
       if (value < current.value) {
         if (!current.left) return undefined;
         prev = current;
@@ -73,37 +84,105 @@ class BinarySearchTree<T> {
         if (!current.right) return undefined;
         prev = current;
         current = current.right;
-      } else break;
+      }
     }
 
-    if (prev) {
-      if (value < prev.value) prev.left = null;
-      else prev.right = null;
-    }
-
-    this._reinsert(current.left);
-    this._reinsert(current.right);
-    console.log("After removal: ");
-    this.print();
+    this._deleteNode(value, current, prev);
     return current;
   }
 
-  _reinsert(node: Node<T> | null) {
-    if (!node) return;
+  _deleteNode(value: T, current: Node<T>, prev: Node<T> | null) {
+    if (current.left && current.right) {
+      prev = current;
+      let successor = current.right;
+      while (successor.left) {
+        prev = successor;
+        successor = successor.left;
+      }
+      current.value = successor.value;
+      this._deleteNode(successor.value, successor, prev);
+    } else {
+      const subst =
+        !current.left && !current.right ? null : current.left ?? current.right;
 
-    if (node.right) this._reinsert(node.right);
-    if (node.left) this._reinsert(node.left);
-    this.insert(node.value);
+      if (prev) {
+        if (value < prev.value) prev.left = subst;
+        else prev.right = subst;
+      } else this.root = subst;
+    }
   }
 
-  print(node: Node<T> | null = this.root, offset: number = 30) {
-    if (!node) return "";
+  breadthFirstSearch(): T[] {
+    if (!this.root) return [];
 
-    console.log(" ".repeat(offset) + node.value);
-    console.log(" ".repeat(offset - 2) + "/" + " ".repeat(4) + "\\");
+    const result: T[] = [];
+    const queue = new Queue<Node<T>>();
+    queue.enqueue(this.root);
+    let node;
 
-    const result = this.print(node.left, offset - 5);
-    this.print(node.right, offset + 5);
+    while ((node = queue.dequeue())) {
+      if (node.left) queue.enqueue(node.left);
+      if (node.right) queue.enqueue(node.right);
+      result.push(node.value);
+    }
+    return result;
+  }
+
+  getOffsetMap(): OffsetEnty<T>[] {
+    if (!this.root) return [];
+    const baseOffset = 30;
+    const nodeOffset = 8;
+
+    const result: OffsetEnty<T>[] = [];
+    const queue = new Queue<OffsetQueueEnty<T>>();
+    queue.enqueue({ node: this.root, offset: baseOffset, depth: 0 });
+    let offsetQueueEnty: OffsetQueueEnty<T> | null;
+
+    while ((offsetQueueEnty = queue.dequeue())) {
+      if (offsetQueueEnty === null) break;
+
+      if (offsetQueueEnty.node.left) {
+        queue.enqueue({
+          node: offsetQueueEnty.node.left,
+          offset:
+            offsetQueueEnty.offset - (nodeOffset - offsetQueueEnty.depth * 2),
+          depth: offsetQueueEnty.depth + 1,
+        });
+      }
+      if (offsetQueueEnty.node.right) {
+        queue.enqueue({
+          node: offsetQueueEnty.node.right,
+          offset:
+            offsetQueueEnty.offset + (nodeOffset - offsetQueueEnty.depth * 2),
+          depth: offsetQueueEnty.depth + 1,
+        });
+      }
+      result.push({
+        value: offsetQueueEnty.node.value,
+        offset: offsetQueueEnty.offset,
+        depth: offsetQueueEnty.depth,
+      });
+    }
+    return result;
+  }
+
+  print() {
+    const offsetMap = this.getOffsetMap();
+
+    let buffer = "";
+    let currentDepth = 0;
+    for (const offsetEntry of offsetMap) {
+      if (offsetEntry.depth === currentDepth) {
+        const offset = " ".repeat(offsetEntry.offset - buffer.length);
+        buffer += offset + offsetEntry.value;
+      } else {
+        console.log(buffer + "\n");
+
+        buffer = " ".repeat(offsetEntry.offset) + offsetEntry.value;
+        currentDepth++;
+      }
+    }
+    console.log(buffer);
   }
 }
 
@@ -116,6 +195,7 @@ bst.insert(25);
 bst.insert(22);
 bst.insert(27);
 bst.insert(40);
+bst.insert(35);
 bst.insert(50);
 
 console.log("After construction:");
