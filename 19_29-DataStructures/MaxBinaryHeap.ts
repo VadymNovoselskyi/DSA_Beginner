@@ -24,6 +24,8 @@ export class MaxBinaryHeap {
   }
 
   extractMax(): number | undefined {
+    if (!this.values.length) return;
+    
     const temp = this.values[0];
     this.values[0] = this.values[this.values.length - 1];
     this.values[this.values.length - 1] = temp;
