@@ -184,7 +184,7 @@ export class BinarySearchTree<T> {
     return result;
   }
 
-  getOffsetMap(): OffsetEnty<T>[] {
+  _getOffsetMap(): OffsetEnty<T>[] {
     if (!this.root) return [];
     const baseOffset = 30;
     const nodeOffset = 8;
@@ -223,7 +223,7 @@ export class BinarySearchTree<T> {
   }
 
   print() {
-    const offsetMap = this.getOffsetMap();
+    const offsetMap = this._getOffsetMap();
 
     let buffer = "";
     let currentDepth = 0;
@@ -242,31 +242,31 @@ export class BinarySearchTree<T> {
   }
 }
 
-const bst = new BinarySearchTree();
-bst.insert(20);
-bst.insert(10);
-bst.insert(5);
-bst.insert(13);
-bst.insert(30);
-bst.insert(25);
-bst.insert(22);
-bst.insert(27);
-bst.insert(40);
-bst.insert(35);
-bst.insert(50);
+// const bst = new BinarySearchTree();
+// bst.insert(20);
+// bst.insert(10);
+// bst.insert(5);
+// bst.insert(13);
+// bst.insert(30);
+// bst.insert(25);
+// bst.insert(22);
+// bst.insert(27);
+// bst.insert(40);
+// bst.insert(35);
+// bst.insert(50);
 
-console.log("After construction:");
-bst.print();
+// console.log("After construction:");
+// bst.print();
 
-console.log(bst.isBalanced());
-bst.insert(60);
-bst.insert(70);
+// console.log(bst.isBalanced());
+// bst.insert(60);
+// bst.insert(70);
 
 // console.log(bst.isBalanced());
 // bst.remove(30);
 // console.log("\n\nAfter removal:");
 // bst.print();
 
-console.log(bst.DFSPreOrder());
-console.log(bst.DFSPostOrder());
-console.log(bst.DFSInOrder());
+// console.log(bst.DFSPreOrder());
+// console.log(bst.DFSPostOrder());
+// console.log(bst.DFSInOrder());
