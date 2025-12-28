@@ -106,6 +106,43 @@ export class BinarySearchTree<T> {
     }
   }
 
+  findSecondLargest(): T | undefined {
+    if (!this.root) return undefined;
+    let current = this.root;
+    let prev: Node<T> | null = null;
+
+    while (current.right) {
+      prev = current;
+      current = current.right;
+    }
+    return prev?.value ? prev.value : undefined;
+  }
+
+  isBalanced(): boolean {
+    if (!this.root) return false;
+
+    let minDepth = Infinity;
+    let maxDepth = -Infinity;
+
+    const queue = new Queue<{ node: Node<T>; depth: number }>();
+    queue.enqueue({ node: this.root, depth: 0 });
+    let nodeInfo;
+
+    while ((nodeInfo = queue.dequeue())) {
+      if (nodeInfo.node.left) {
+        queue.enqueue({ node: nodeInfo.node.left, depth: nodeInfo.depth + 1 });
+      }
+      if (nodeInfo.node.right) {
+        queue.enqueue({ node: nodeInfo.node.right, depth: nodeInfo.depth + 1 });
+      }
+
+      if (nodeInfo.node.left && nodeInfo.node.right) continue;
+      minDepth = Math.min(minDepth, nodeInfo.depth);
+      maxDepth = Math.max(maxDepth, nodeInfo.depth);
+    }
+    return maxDepth - minDepth <= 1;
+  }
+
   breadthFirstSearch(): T[] {
     if (!this.root) return [];
 
@@ -184,6 +221,7 @@ const bst = new BinarySearchTree();
 bst.insert(20);
 bst.insert(10);
 bst.insert(5);
+bst.insert(13);
 bst.insert(30);
 bst.insert(25);
 bst.insert(22);
@@ -195,6 +233,11 @@ bst.insert(50);
 console.log("After construction:");
 bst.print();
 
-bst.remove(30);
-console.log("\n\nAfter removal:");
-bst.print();
+console.log(bst.isBalanced());
+bst.insert(60);
+bst.insert(70);
+
+console.log(bst.isBalanced());
+// bst.remove(30);
+// console.log("\n\nAfter removal:");
+// bst.print();
