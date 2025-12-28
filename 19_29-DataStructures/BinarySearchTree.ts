@@ -59,15 +59,13 @@ export class BinarySearchTree<T> {
     if (!this.root) return undefined;
     let current = this.root;
 
-    while (true) {
-      if (value < current.value) {
-        if (!current.left) return undefined;
-        current = current.left;
-      } else if (value > current.value) {
-        if (!current.right) return undefined;
-        current = current.right;
-      } else return current;
+    while (value !== current.value) {
+      const next = value < current.value ? current.left : current.right;
+
+      if (!next) return undefined;
+      current = next;
     }
+    return current;
   }
 
   remove(value: T): Node<T> | undefined {
@@ -76,15 +74,11 @@ export class BinarySearchTree<T> {
     let prev: Node<T> | null = null;
 
     while (value !== current.value) {
-      if (value < current.value) {
-        if (!current.left) return undefined;
-        prev = current;
-        current = current.left;
-      } else if (value > current.value) {
-        if (!current.right) return undefined;
-        prev = current;
-        current = current.right;
-      }
+      const next = value < current.value ? current.left : current.right;
+
+      if (!next) return undefined;
+      prev = current;
+      current = next;
     }
 
     this._deleteNode(value, current, prev);
